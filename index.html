@@ -867,7 +867,9 @@ function showTool(){
   document.getElementById('tool-panel').style.display='block';
   if(!_toolLoaded){
     _toolLoaded=true;
-    var html=atob(_toolB64);
+    // atob() gives Latin-1 bytes — must re-decode as UTF-8 for emoji/special chars
+    var bytes=Uint8Array.from(atob(_toolB64),function(c){return c.charCodeAt(0);});
+    var html=new TextDecoder('utf-8').decode(bytes);
     var frame=document.getElementById('tool-frame');
     frame.onload=function(){
       var l=document.getElementById('tool-loading');
